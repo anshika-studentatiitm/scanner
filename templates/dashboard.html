@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<div class="sidebar">
+
+    <h2 class="logo">SCANNER</h2>
+
+    <a href="/dashboard">Dashboard</a>
+    <a href="/profile">Profile</a>
+    <a href="/history">History</a>
+    <a href="/logout" class="logout">Logout</a>
+
+</div>
+
+<!-- ================= MAIN ================= -->
+
+<div class="main">
+
+    <div class="box">
+
+        <h2>Vulnerability Dashboard</h2>
+
+        <!-- ================= SCAN FORM ================= -->
+
+        <form id="scanForm" method="POST" onsubmit="runScan(event)">
+
+            <input
+                type="text"
+                name="website"
+                placeholder="Enter Website URL"
+                required
+            >
+
+            <button type="submit">
+                Start Scan
+            </button>
+
+        </form>
+
+        <!-- ================= TERMINAL ================= -->
+
+        <div id="terminal"></div>
+
+        <!-- ================= RESULTS ================= -->
+
+        {% if results %}
+
+        <h2 class="result-title">
+            Scan Results
+        </h2>
+
+        <div class="results-grid">
+
+            {% for item in results %}
+
+            <div class="card
+                {% if item.severity == 'high' %}
+                    high
+                {% elif item.severity == 'medium' %}
+                    medium
+                {% else %}
+                    low
+                {% endif %}
+            ">
+
+                <h3>
+                    {{ item.type | upper }}
+                </h3>
+
+                <p>
+                    <b>Severity:</b>
+                    {{ item.severity }}
+                </p>
+
+                {% if item.port %}
+                <p>
+                    <b>Port:</b>
+                    {{ item.port }}
+                </p>
+                {% endif %}
+
+                {% if item.state %}
+                <p>
+                    <b>State:</b>
+                    {{ item.state }}
+                </p>
+                {% endif %}
+
+                {% if item.service %}
+                <p>
+                    <b>Service:</b>
+                    {{ item.service }}
+                </p>
+                {% endif %}
+
+                {% if item.issue %}
+                <p>
+                    <b>Issue:</b>
+                    {{ item.issue }}
+                </p>
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+function fakeTerminal(callback) {
+
+    const logs = [
+
+        "[+] Initializing scanner...",
+        "[+] Resolving target...",
+        "[+] Scanning open ports...",
+        "[+] Testing SQL injection...",
+        "[+] Checking XSS vulnerabilities...",
+        "[+] Analyzing HTTP headers...",
+        "[+] Detecting security flaws...",
+        "[✔] Scan complete"
+
+    ];
+
+    let terminal = document.getElementById("terminal");
+
+    terminal.innerHTML = "";
+
+    let i = 0;
+
+    function typeLine() {
+
+        if (i < logs.length) {
+
+            let line = document.createElement("div");
+
+            line.textContent = logs[i];
+
+            terminal.appendChild(line);
+
+            terminal.scrollTop = terminal.scrollHeight;
+
+            i++;
+
+            setTimeout(typeLine, 500);
+
+        } else {
+
+            callback();
+
+        }
+    }
+
+    typeLine();
+}
+
+function runScan(event) {
+
+    event.preventDefault();
+
+    const form = document.getElementById("scanForm");
+
+    fakeTerminal(function () {
+
+        form.submit();
+
+    });
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+<div class="main"><link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<div class="box">
+<h2>Profile</h2>
+
+<p>Name: {{ user.name }}</p>
+<p>Phone: {{ user.phone }}</p>
+<p>Email: {{ user.email }}</p>
+</div>
+</div>
+<div class="sidebar">
+    <h2 class="logo">Scanner</h2>
+
+    <a href="/dashboard">Dashboard</a>
+    <a href="/profile">Profile</a>
+    <a href="/history">History</a>
+    <a href="/logout" class="logout">Logout</a>
+</div>
